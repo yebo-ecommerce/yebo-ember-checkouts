@@ -111,8 +111,8 @@ test('can advance order state', function(assert) {
             var NY  = USA.get('states').findBy('name', 'New York');
 
             yebo.get('currentOrder.shipAddress').setProperties({
-              firstname: 'Hugh',
-              lastname: 'Francis',
+              firstName: 'Hugh',
+              lastName: 'Francis',
               address1: '123 Street st',
               address2: 'Suite 2',
               city: 'New York City',

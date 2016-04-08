@@ -60,8 +60,8 @@ test('it serializes correctly on the address state', function(assert) {
     });
 
     var shipAddress = yeboStore.createRecord('address', {
-      firstname: 'Hugh',
-      lastname: 'Francis',
+      firstName: 'Hugh',
+      lastName: 'Francis',
       address1: '123 Street st',
       address2: 'Suite 2',
       city: 'New York City',
@@ -106,8 +106,8 @@ test('it serializes correctly based on order state', function(assert) {
     });
 
     var shipAddress = yeboStore.createRecord('address', {
-      firstname: 'Hugh',
-      lastname: 'Francis',
+      firstName: 'Hugh',
+      lastName: 'Francis',
       address1: '123 Street st',
       address2: 'Suite 2',
       city: 'New York City',
