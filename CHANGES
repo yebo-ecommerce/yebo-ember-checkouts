@@ -1,3 +1,7 @@
+Version 0.2.11:
+ - save
+ - bump to version 3 - ready to publish
+
 Version 0.3.0:
  - Merge branch 'master' into develop
  - save
