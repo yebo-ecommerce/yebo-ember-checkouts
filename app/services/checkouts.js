@@ -374,9 +374,11 @@ export default Ember.Service.extend(Ember.Evented, {
       serialized = address.content.serialize();
 
     // Lets make it using the SDK
-    YeboSDK.Store.fetch(path, serialized, 'POST').then((address) => {
+    YeboSDK.Store.fetch(path, serialized, 'POST').then((data) => {
       // Set the Address ID
-      currentOrder.get(name).set('id', address.id);
+      if(!currentOrder.get(name).get("id")) {
+        currentOrder.get(name).set('id', data.address.id);
+      }
 
       // Testing reloading the currentOrder
       // currentOrder.reload();
@@ -385,7 +387,7 @@ export default Ember.Service.extend(Ember.Evented, {
       this.set(`editing${this._generateNiceName(name)}`, false);
 
       // Trigger some events here
-      this.trigger(`${name}-saved`, address);
+      this.trigger(`${name}-saved`, data.address);
     }).catch((error) => {
       // @todo Show the error messages
       console.log(error);
