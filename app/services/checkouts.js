@@ -375,11 +375,6 @@ export default Ember.Service.extend(Ember.Evented, {
 
     // Lets make it using the SDK
     YeboSDK.Store.fetch(path, serialized, 'POST').then((data) => {
-      // Set the Address ID
-      if(!currentOrder.get(name).get("id")) {
-        currentOrder.get(name).set('id', data.address.id);
-      }
-
       // Testing reloading the currentOrder
       // currentOrder.reload();
 
