@@ -373,6 +373,8 @@ export default Ember.Service.extend(Ember.Evented, {
     else
       serialized = address.content.serialize();
 
+    this.get('yebo').trigger('address.before.save', { type: name, data: serialized });
+
     // Lets make it using the SDK
     YeboSDK.Store.fetch(path, serialized, 'POST').then((data) => {
       // Testing reloading the currentOrder
@@ -384,8 +386,7 @@ export default Ember.Service.extend(Ember.Evented, {
       // Trigger some events here
       this.trigger(`${name}-saved`, data.address);
     }).catch((error) => {
-      // @todo Show the error messages
-      console.log(error);
+      this.get('yebo').trigger('address.notice', { type: 'error', data: error.message });
     });
   }.on('saveAddress'),
 
@@ -402,8 +403,10 @@ export default Ember.Service.extend(Ember.Evented, {
     if( flag === false )
       return;
 
+    this.get('yebo').trigger('shipment.before.remove');
     // Lets make it using the SDK
     YeboSDK.Store.fetch(this._checkoutURL('address/remove/ship'), {}, 'POST').then((res) => {
+      this.get('yebo').trigger('shipment.after.remove');
       // Create a new empty address
       let emptyAddress = this.get('yebo').get('store').createRecord('address');
 
@@ -429,7 +432,9 @@ export default Ember.Service.extend(Ember.Evented, {
 
     // Lets make it using the SDK
     this.get("yebo").trigger("checkoutStarted");
+    this.get('yebo').trigger('checkout.before.finish');
     YeboSDK.Store.fetch(path, options, 'POST').then((res) => {
+      this.get('yebo').trigger('checkout.after.finish', { type: 'success', response: res });
       this.get("yebo").trigger('orderCompleted', this.get('currentOrder.number'));
 
       // Clean the current order (that is completed)
@@ -440,14 +445,14 @@ export default Ember.Service.extend(Ember.Evented, {
       if( res.source !== undefined && res.source.redirect )
         window.location = res.source.url;
     }).catch((error) => {
-      // @todo Show the error messages
-      console.log(error);
+      this.get('yebo').trigger('checkout.after.finish', { type: 'success', response: error });
 
       if(error.message.state === "completed") {
         this.trigger("orderCompleted", this.get("currentOrder.number"));
         this.get("yebo").clearCurrentOrder(true);
       }
     }).finally(() => {
+      this.get('yebo').trigger('checkout.after.finish');
       this.get("yebo").trigger("checkoutEnded");
     });
   }.on('checkout'),
