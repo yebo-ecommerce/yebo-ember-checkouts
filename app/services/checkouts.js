@@ -436,6 +436,7 @@ export default Ember.Service.extend(Ember.Evented, {
     YeboSDK.Store.fetch(path, options, 'POST').then((res) => {
       this.get('yebo').trigger('checkout.after.finish', { type: 'success', response: res });
       this.get("yebo").trigger('orderCompleted', this.get('currentOrder.number'));
+      this.trigger('orderCompleted', this.get('currentOrder.number'));
 
       // Clean the current order (that is completed)
       this.get('yebo').clearCurrentOrder(true);
