@@ -211,6 +211,8 @@ export default Ember.Mixin.create({
           // Trigger the error
           this.trigger('serverError', error);
 
+          throw error;
+
           // Reject it
           reject();
         });

@@ -169,8 +169,11 @@ export default Ember.Service.extend(Ember.Evented, {
             // Push the payload
             store.pushPayload(res);
 
+            // Transform in a Model
+            let addr = store.createRecord('address', resAddress)
+
             // Set it to the checkout
-            this.set(`${address}Address`, store.createRecord('address', resAddress));
+            this.set(`${address}Address`, addr);
 
             // Current Address
             let currentAddress = this.get(`${address}Address`);
