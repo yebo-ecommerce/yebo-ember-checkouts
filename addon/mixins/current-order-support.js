@@ -112,7 +112,8 @@ export default Ember.Mixin.create({
     @return {Boolean} Always resolves to `true`.
     */
   _restoreCurrentOrder: function() {
-    // Restore!
+    // Restore
+    // this is the storable restore
     this.restore();
 
     // Get the order storaged
