@@ -157,6 +157,8 @@ export default Ember.Service.extend(Ember.Evented, {
           // Check if the address exists
           // @todo Check in the API why it has two different types
           if( !Ember.isArray(res.address) ) {
+            // first thing to refactor
+            console.log("refactor 1")
             // Yebo Store
             let store = this.get('yebo').get('store');
 
@@ -166,14 +168,25 @@ export default Ember.Service.extend(Ember.Evented, {
             // Delete the adress
             delete res.address
 
+            // Because YES
+            // loljk is not a clone
+            // delete resAddress.id
+            // Here's the model
+            let addr = store.peekRecord('address', resAddress.id);
+
             // Push the payload
-            store.pushPayload(res);
+            // You don't have to push payload because it have id
+            // store.pushPayload(res);
 
             // Transform in a Model
-            let addr = store.createRecord('address', resAddress)
+            // let addr = store.createRecord('address', resAddress)
 
             // Set it to the checkout
             this.set(`${address}Address`, addr);
+
+            // Set it for show
+            // Whatch here, things will break here
+            this.get("yebo.currentOrder").set(address + 'Address', addr)
 
             // Current Address
             let currentAddress = this.get(`${address}Address`);
@@ -182,12 +195,15 @@ export default Ember.Service.extend(Ember.Evented, {
             currentAddress.set('country', store.peekRecord('country', resAddress.country_id));
 
             // Set State
-            if( resAddress.state_id )
+            if( resAddress.state_id ) {
               currentAddress.set('state', store.peekRecord('state', resAddress.state_id));
+            }
 
             // Lets save this address
             this.trigger('saveAddress', `${address}Address`, currentAddress);
           }
+        }).catch(error => {
+          console.log(error);
         });
       }
     }

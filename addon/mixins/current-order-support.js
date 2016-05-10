@@ -533,7 +533,7 @@ export default Ember.Mixin.create({
       this.trigger('newOrderCreateFailed', error);
       this.trigger('serverError', error);
       return error;
-    }
+    });
   },
 
   /**
