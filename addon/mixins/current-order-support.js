@@ -312,7 +312,7 @@ export default Ember.Mixin.create({
     let order = this.get('currentOrder');
 
     // Not initialized!
-    if (cart === null || order === null) {
+    if (cart == null || order == null) {
       // Initialize the cart
       return this._initializeCart().then(() => {
         // Add it!
@@ -338,7 +338,7 @@ export default Ember.Mixin.create({
     let order = this.get('currentOrder');
 
     // The cart and order should be already initialized
-    if( cart === null || order === null )
+    if( cart == null || order == null )
       return;
 
     // Remove it!
@@ -386,7 +386,8 @@ export default Ember.Mixin.create({
     let cart = this.get('cart');
 
     // Initialize the cart
-    cart = new YeboSDK.Cart(this.get('currentOrder.number'), this.get('sessionAccount.user.token'));
+    cart = new YeboSDK.Cart(this.get('currentOrder') == null ? undefined : this.get('currentOrder.number'), this.get('sessionAccount.user.token'));
+
     // Put it in the instance
     this.set('currentCart', cart);
 
@@ -530,7 +531,6 @@ export default Ember.Mixin.create({
       this.trigger('serverError', error);
       return error;
     }
-                                                       );
   },
 
   /**
