@@ -550,7 +550,7 @@ export default Ember.Mixin.create({
     // Because it says so
     // Clean the local storage(persist)
     this.persist({
-      guestToken: null,
+      // guestToken: null,
       orderId: null
     });
     this.set('currentOrder', null);

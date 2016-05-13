@@ -125,6 +125,9 @@ export default Ember.Service.extend(Ember.Evented, {
    * @public
    */
   initializeCheckout: function() {
+    // first thing to refactor
+    console.log("refactor 1");
+
     // Current Order
     let currentOrder = this.get('yebo').get('currentOrder');
 
@@ -150,62 +153,66 @@ export default Ember.Service.extend(Ember.Evented, {
 
         // So... We can calculate the shipments
         this.trigger('shipments');
-      } else {
-        // There is no address
-        // Try to get a new one
-        YeboSDK.Store.fetch(this._checkoutURL(`address/${address}`), {}, 'GET').then((res) => {
-          // Check if the address exists
-          // @todo Check in the API why it has two different types
-          if( !Ember.isArray(res.address) ) {
-            // first thing to refactor
-            console.log("refactor 1")
-            // Yebo Store
-            let store = this.get('yebo').get('store');
 
-            // Get the address resultant
-            let resAddress = res.address;
-
-            // Delete the adress
-            delete res.address
-
-            // Because YES
-            // loljk is not a clone
-            // delete resAddress.id
-            // Here's the model
-            let addr = store.peekRecord('address', resAddress.id);
-
-            // Push the payload
-            // You don't have to push payload because it have id
-            // store.pushPayload(res);
-
-            // Transform in a Model
-            // let addr = store.createRecord('address', resAddress)
-
-            // Set it to the checkout
-            this.set(`${address}Address`, addr);
-
-            // Set it for show
-            // Whatch here, things will break here
-            this.get("yebo.currentOrder").set(address + 'Address', addr)
-
-            // Current Address
-            let currentAddress = this.get(`${address}Address`);
-
-            // Set country
-            currentAddress.set('country', store.peekRecord('country', resAddress.country_id));
-
-            // Set State
-            if( resAddress.state_id ) {
-              currentAddress.set('state', store.peekRecord('state', resAddress.state_id));
-            }
-
-            // Lets save this address
-            this.trigger('saveAddress', `${address}Address`, currentAddress);
-          }
-        }).catch(error => {
-          console.log(error);
-        });
+        return true;
       }
+
+      // There is no address
+      // Try to get a new one
+      YeboSDK.Store.fetch(this._checkoutURL(`address/${address}`), {}, 'GET').then((res) => {
+        // Check if the address exists
+        // @todo Check in the API why it has two different types
+        if( Ember.isArray(res.address) ) {
+          throw "Something is wrong with address";
+        }
+
+        // Yebo Store
+        let store = this.get('yebo').get('store');
+
+        // Get the address resultant
+        let resAddress = res.address;
+
+        // Delete the adress
+        delete res.address
+
+        // Because YES
+        // loljk is not a clone
+        // delete resAddress.id
+        // Here's the model
+        // let addr = store.peekRecord('address', resAddress.id);
+
+        // Push the payload
+        // You don't have to push payload because it have id
+        // if ( addr === null ) {
+        //   store.pushPayload({ address: resAddress});
+        //   addr = store.peekRecord('address', resAddress.id);
+        // }
+        store.pushPayload({ address: resAddress});
+        let addr = store.peekRecord('address', resAddress.id);
+
+        // Set it to the checkout
+        this.set(`${address}Address`, addr);
+
+        // Set it for show
+        // Whatch here, things will break here
+        this.get("yebo.currentOrder").set(address + 'Address', addr)
+
+        // Current Address
+        let currentAddress = this.get(`${address}Address`);
+
+        // Set country
+        currentAddress.set('country', store.peekRecord('country', resAddress.country_id));
+
+        // Set State
+        if( resAddress.state_id ) {
+          currentAddress.set('state', store.peekRecord('state', resAddress.state_id));
+        }
+
+        // Lets save this address
+        this.trigger('saveAddress', `${address}Address`, currentAddress);
+      }).catch(error => {
+        console.log(error);
+      });
     }
   }.on('checkoutCalled'),
 
