@@ -42,6 +42,8 @@ export default Ember.Service.extend(Ember.Evented, {
    * @type Boolean
    */
   loading: true,
+  finishing: false,
+  msgError: false,
 
   /**
    * Editing billAddress
@@ -447,6 +449,8 @@ export default Ember.Service.extend(Ember.Evented, {
    * @private
    */
   finishCheckout: function() {
+    this.set('finishing', true);
+
     // Yebo Ajax path
     let path = this._checkoutURL('payments');
 
@@ -467,20 +471,24 @@ export default Ember.Service.extend(Ember.Evented, {
       // Clean the current order (that is completed)
       this.get('yebo').clearCurrentOrder(true);
 
+      this.set('finishing', false);
       // Check if is necessary to redirect the page
       // @todo Check if it will work fine
       if( res.source !== undefined && res.source.redirect )
         window.location = res.source.url;
     }).catch((error) => {
       this.get('yebo').trigger('checkout.after.finish', { type: 'success', response: error });
+      this.set('msgError', error.message.order[0]);
 
       if(error.message.state === "completed") {
         this.trigger("orderCompleted", this.get("currentOrder.number"));
         this.get("yebo").clearCurrentOrder(true);
+        this.set('finishing', false);
       }
     }).finally(() => {
       this.get('yebo').trigger('checkout.after.finish');
       this.get("yebo").trigger("checkoutEnded");
+      this.set('finishing', false);
     });
   }.on('checkout'),
 
