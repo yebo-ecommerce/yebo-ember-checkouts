@@ -7,7 +7,8 @@ export function initialize(instance) {
   // App.deferReadiness();
   YeboService._restoreCurrentOrder().finally(function() {
     // Essa estancia HAHAHAHA
-    App.advanceReadiness();
+    //https://guides.emberjs.com/v2.0.0/ember-inspector/troubleshooting/
+    // App.advanceReadiness();
   });
 }
 
