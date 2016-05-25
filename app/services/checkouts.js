@@ -169,13 +169,12 @@ export default Ember.Service.extend(Ember.Evented, {
         }
 
         // Yebo Store
-        let store = this.get('yebo').get('store');
+        const store = this.get('yebo').get('store');
 
         // Get the address resultant
-        let resAddress = res.address;
-
-        // Delete the adress
-        delete res.address
+        const resAddress = res.address;
+        const resStates = res.states
+        const resCountries = res.countries
 
         // Because YES
         // loljk is not a clone
@@ -190,6 +189,9 @@ export default Ember.Service.extend(Ember.Evented, {
         //   addr = store.peekRecord('address', resAddress.id);
         // }
         store.pushPayload({ address: resAddress});
+        store.pushPayload({ state: resStates});
+        store.pushPayload({ country: resCountries});
+
         let addr = store.peekRecord('address', resAddress.id);
 
         // Set it to the checkout
