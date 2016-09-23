@@ -1,6 +1,6 @@
 {
   "name": "yebo-ember-checkouts",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Checkout functionality for a Yebo Ember Application.",
   "directories": {
     "doc": "doc",
