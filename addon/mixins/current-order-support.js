@@ -349,7 +349,7 @@ export default Ember.Mixin.create({
       // Remove it using SDK
       cart.removeItem(lineItem.get('id'), qty).then((res) => {
         // Find the line item
-        this.get('yebo.store').query('lineItem', { id: res.item.id, number: res.order.number }).then((lineItem) => {
+        this.get('yebo.store').queryRecord('lineItem', { id: res.item.id, number: res.order.number }).then((lineItem) => {
           // Reload the order
           order.reload();
 
@@ -456,7 +456,7 @@ export default Ember.Mixin.create({
         // Find the line item
         // const qry = this.get('yebo.store').findRecord('lineItem', response.item.id, { number: response.order.number })
 
-        this.get('yebo.store').query('lineItem', { id: response.item.id, number: response.order.number }).then((lineItem) => {
+        this.get('yebo.store').queryRecord('lineItem', { id: response.item.id, number: response.order.number }).then((lineItem) => {
           // Event
           this.trigger('didAddToCart', lineItem);
           // Finish!
